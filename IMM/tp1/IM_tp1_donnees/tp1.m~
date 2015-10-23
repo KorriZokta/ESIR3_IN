@@ -1,0 +1,20 @@
+
+%coupe_aff(1);
+%coupe_aff(2);
+%coupe_aff(3);
+
+load('ima.mat');
+
+%coupe_aff(M0,1);
+%coupe_aff(2);
+%coupe_aff(3);
+
+
+%[seg,seuils]=k_moyennes(M0,3);
+%coupe_aff(seg,1);
+%seg=smooth3(seg);
+
+%MarchingCubes(seg,1.5);
+
+I =M0(:,:,80);
+least_square(I);
