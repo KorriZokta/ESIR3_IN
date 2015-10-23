@@ -1,0 +1,1 @@
+/usr/bin/c++   -O2 -g    CMakeFiles/LeTest.dir/BaseApplication.cpp.o CMakeFiles/LeTest.dir/TutorialApplication.cpp.o  -o dist/bin/LeTest -rdynamic /usr/local/lib/libOgreMain.so -lboost_thread-mt -lboost_date_time-mt -lOIS -Wl,-rpath,/usr/local/lib: 

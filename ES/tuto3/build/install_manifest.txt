@@ -1,0 +1,8 @@
+/home/zokta/ESIR3/ES/tuto3/build/dist/.//media/models/ogrehead.mesh
+/home/zokta/ESIR3/ES/tuto3/build/dist/.//media/materials/scripts/Ogre.material
+/home/zokta/ESIR3/ES/tuto3/build/dist/.//media/materials/textures/spheremap.png
+/home/zokta/ESIR3/ES/tuto3/build/dist/.//media/materials/textures/GreenSkin.jpg
+/home/zokta/ESIR3/ES/tuto3/build/dist/.//media/materials/textures/tusk.jpg
+/home/zokta/ESIR3/ES/tuto3/build/dist/.//media/packs/SdkTrays.zip
+/home/zokta/ESIR3/ES/tuto3/build/dist/bin/plugins.cfg
+/home/zokta/ESIR3/ES/tuto3/build/dist/bin/resources.cfg

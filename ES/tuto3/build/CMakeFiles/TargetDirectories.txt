@@ -1,0 +1,1 @@
+/home/zokta/ESIR3/ES/tuto3/build/CMakeFiles/OgreApp.dir

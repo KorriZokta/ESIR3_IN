@@ -1,0 +1,1 @@
+/usr/bin/c++    -fopenmp    CMakeFiles/tutorial-viewer.dir/tutorial-viewer.cpp.o  -o tutorial-viewer -rdynamic /usr/local/lib/libvisp.a -lSM -lICE -lX11 -lXext -lm -lboost_thread-mt -lboost_date_time-mt /usr/local/lib/libOgreMain.so -lOIS -lpthread -lz -Wl,-rpath,/usr/local/lib 
