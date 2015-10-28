@@ -11,13 +11,16 @@
 
 using namespace std ;
 
-
 vpColVector sceneToCamera(vpHomogeneousMatrix & a, vpColVector & b){
 	return a*b;
 }
 
 int main()
 {
+
+	vpImage<unsigned char> Icamera(550,550,0);
+	vpDisplayX d(Icamera) ;
+
 	float aile = 0.5;
 
 	vpHomogeneousMatrix cMs(0, 0, 1, 0, 0, 0);
@@ -48,7 +51,6 @@ int main()
 	sX4[1]=-aile;
 	sX4[2]=0;
 	sX4[3]=1;
-
 	
 	sPoints[0]=sX1;
 	sPoints[1]=sX2;
@@ -60,20 +62,21 @@ int main()
 		cPoints[i]=sceneToCamera(cMs,sPoints[i]);
 		cout<<cPoints[i]<<endl;
 	}
+	
+	int px=500;
+	int py=500;
+	int u0=275;
+	int v0=275;
+  	vpDisplay::display(Icamera) ;
 
-	vpImage<vpRGBa> interfaceCamera(500,500,255);
-	vpImage<vpRGBa> interfaceCameraNope(500,500,255);
+	for(int i = 0; i<nbPoints ;i++){
 
-	vpDisplayX displayCamera(interfaceCamera, 0, 0,"vue camera");
-	vpDisplayX displayCameraNope(interfaceCameraNope, 250, 250,"vue cameraNope");
+		vpDisplay::displayCross(Icamera,cPoints[i][0]*px+u0,cPoints[i][1]*py+v0,20,vpColor::red) ;
+	}
 
-	vpDisplay::display(interfaceCamera);
-	vpDisplay::display(interfaceCameraNope);
+  	vpDisplay::flush(Icamera) ;
+  	vpDisplay::getClick(Icamera) ;
 
-	vpDisplay::getClick(interfaceCamera);
-	vpDisplay::getClick(interfaceCameraNope);
-	vpDisplay::flush(interfaceCamera);
-	vpDisplay::flush(interfaceCameraNope);
 	return 0;
 }
 
