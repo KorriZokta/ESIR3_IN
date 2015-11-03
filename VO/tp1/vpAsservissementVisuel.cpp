@@ -44,8 +44,10 @@ int main()
 	/*Matrices Homogenes*/
 	vpHomogeneousMatrix cMs(0.55,0.55,0, 0,0,0);
 	vpHomogeneousMatrix obMs(0,0,1, 0,0,0);
-	vpHomogeneousMatrix obMc;
+	vpHomogeneousMatrix tMs(0,0,1, 0,0,0);
+	vpHomogeneousMatrix obMc,obMt;
 	obMc = obMs*cMs.inverse();
+	obMt = obMs*tMs.inverse();
    
    /*Coord Scène(mètres)*/
 	int nbPoints = 4;
@@ -92,20 +94,30 @@ int main()
 	   obPoints[i]=sceneToCamera(obMs,sPoints[i]);
 	}
 	
-	/*Coord Cam+Obs proj(mètres)*/
+	/*Coord Targ(mètres)*/
+	vpColVector tPoints[nbPoints];
+	for (int i = 0; i<nbPoints;i++) {
+	   tPoints[i]=sceneToCamera(tMs,sPoints[i]);
+	}
+	
+	/*Coord Cam+Obs+Targ proj(mètres)*/
 	vpColVector cPointsProj[nbPoints];
 	vpColVector obPointsProj[nbPoints];
+	vpColVector tPointsProj[nbPoints];
 	for(int i=0; i<nbPoints; i++) {
 	   cPointsProj[i] = proj*cPoints[i];
 	   obPointsProj[i] = proj*obPoints[i];
+	   tPointsProj[i] = proj*tPoints[i];
 	}
 	
-	/*Coord Cam+Obs proj(pixels)*/
+	/*Coord Cam+Obs+Targ proj(pixels)*/
 	vpColVector cPointsPix[nbPoints];
 	vpColVector obPointsPix[nbPoints];
+	vpColVector tPointsPix[nbPoints];
 	for(int i=0; i<nbPoints; i++) {
 	   cPointsPix[i] = k*cPointsProj[i];
 	   obPointsPix[i] = k*obPointsProj[i];
+	   tPointsPix[i] = k*tPointsProj[i];
 	}
 	
 	/*Init affichage*/
@@ -128,6 +140,7 @@ int main()
 	   vpDisplay::displayCross(iObs,obPointsPix[i][0],obPointsPix[i][1],20,vpColor::green);
 	}
 	vpDisplay::displayCamera(iObs,obMc,cam,0.5,vpColor::blue,0.5); 
+	vpDisplay::displayCamera(iObs,obMt,cam,0.5,vpColor::red,0.5);
 
   	
   	
