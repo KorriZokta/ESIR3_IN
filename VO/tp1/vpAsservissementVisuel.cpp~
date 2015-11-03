@@ -25,25 +25,16 @@ int main()
 	double u0=275;
 	double v0=275;
 	vpCameraParameters cam(px,py,u0,v0);
-	vpMatrix k(3,3);
-	k[0][0] = px;
-	k[1][1] = py;
-	k[0][2] = u0;
-	k[1][2] = v0;
-	k[2][2] = 1;
-	//vpMatrix k = cam.get_K();
 	
 	/*Projection*/
 	vpMatrix proj(3,4);
 	proj[0][0]=1;
 	proj[1][1]=1;
-	proj[2][2]=1;
-	
-	
+	proj[2][2]=2;
 	
 	/*Matrices Homogenes*/
-	vpHomogeneousMatrix cMs(0.55,0.55,0, 0,0,0);
-	vpHomogeneousMatrix obMs(0,0,1, 0,0,0);
+	vpHomogeneousMatrix cMs(0,0,0, 0,0,0);
+	vpHomogeneousMatrix obMs(0,0,-10, 0,0,0);
 	vpHomogeneousMatrix obMc;
 	obMc = obMs*cMs.inverse();
    
@@ -92,22 +83,6 @@ int main()
 	   obPoints[i]=sceneToCamera(obMs,sPoints[i]);
 	}
 	
-	/*Coord Cam+Obs proj(mètres)*/
-	vpColVector cPointsProj[nbPoints];
-	vpColVector obPointsProj[nbPoints];
-	for(int i=0; i<nbPoints; i++) {
-	   cPointsProj[i] = proj*cPoints[i];
-	   obPointsProj[i] = proj*obPoints[i];
-	}
-	
-	/*Coord Cam+Obs proj(pixels)*/
-	vpColVector cPointsPix[nbPoints];
-	vpColVector obPointsPix[nbPoints];
-	for(int i=0; i<nbPoints; i++) {
-	   cPointsPix[i] = k*cPointsProj[i];
-	   obPointsPix[i] = k*obPointsProj[i];
-	}
-	
 	/*Init affichage*/
 	vpImage<unsigned char> iCam(550,550,0);
 	vpDisplayX displayCam;
@@ -119,15 +94,15 @@ int main()
   	/*Affichage Cam*/
   	vpDisplay::display(iCam);
 	for(int i = 0; i<nbPoints ;i++){
-		vpDisplay::displayCross(iCam,cPointsPix[i][0],cPointsPix[i][1],20,vpColor::red);
+		vpDisplay::displayCross(k*(proj*iCam),cPoints[i][0]*px+u0,cPoints[i][1]*py+v0,20,vpColor::red);
 	}
 	
 	/*Affichage Obs*/
 	vpDisplay::display(iObs);
 	for(int i = 0; i<nbPoints; i++) {
-	   vpDisplay::displayCross(iObs,obPointsPix[i][0],obPointsPix[i][1],20,vpColor::green);
+	   vpDisplay::displayCross(k*(proj*iObs),obPoints[i][0]*px+u0,obPoints[i][1]*py+v0,20,vpColor::green);
 	}
-	vpDisplay::displayCamera(iObs,obMc,cam,0.5,vpColor::blue,0.5); 
+	vpDisplay::displayCamera(iObs,obMc,cam,1,vpColor::blue,1); 
 
   	
   	
