@@ -9,7 +9,7 @@
 #include <visp/vpColVector.h>
 #include <visp/vpHomogeneousMatrix.h>
 
-using namespace std ;
+using namespace std;
 
 vpColVector sceneToCamera(vpHomogeneousMatrix & a, vpColVector & b){
 	return a*b;
@@ -19,11 +19,16 @@ int main()
 {
 
 	vpImage<unsigned char> Icamera(550,550,0);
-	vpDisplayX d(Icamera) ;
+	vpDisplayX d(Icamera);
+	vpImage<unsigned char> Inocam(550,550,0);
+	vpDisplayX d2(Inocam);
 
 	float aile = 0.5;
 
-	vpHomogeneousMatrix cMs(0, 0, 1, 0, 0, 0);
+	vpHomogeneousMatrix cMs(1,2,0, 0,0,0);
+	vpHomogeneousMatrix ceMs(0,0,1, 0,0,0);
+	vpHomogeneousMatrix ceMc;
+	ceMc = ceMs*cMs.inverse();
 
 	int nbPoints = 4;
 	vpColVector sPoints[nbPoints];
@@ -58,25 +63,37 @@ int main()
 	sPoints[3]=sX4;
 	
 	vpColVector cPoints[nbPoints];
-	for (int i = 0; i <nbPoints;i++){
+	for (int i = 0; i<nbPoints;i++){
 		cPoints[i]=sceneToCamera(cMs,sPoints[i]);
-		cout<<cPoints[i]<<endl;
+		//cout<<cPoints[i]<<endl;
 	}
 	
-	int px=500;
-	int py=500;
-	int u0=275;
-	int v0=275;
-  	vpDisplay::display(Icamera) ;
+	vpColVector cePoints[nbPoints];
+	for (int i = 0; i<nbPoints;i++) {
+	   cePoints[i]=sceneToCamera(ceMs,sPoints[i]);
+	}
+	
+	double px=500;
+	double py=500;
+	double u0=275;
+	double v0=275;
+	vpCameraParameters cam(px,py,u0,v0);
+  	vpDisplay::display(Icamera);
 
 	for(int i = 0; i<nbPoints ;i++){
-
-		vpDisplay::displayCross(Icamera,cPoints[i][0]*px+u0,cPoints[i][1]*py+v0,20,vpColor::red) ;
+		vpDisplay::displayCross(Icamera,cPoints[i][0]*px+u0,cPoints[i][1]*py+v0,20,vpColor::red);
 	}
+	
+	vpDisplay::display(Inocam);
+	for(int i = 0; i<nbPoints; i++) {
+	   vpDisplay::displayCross(Inocam,cePoints[i][0]*px+u0,cePoints[i][1]*py+v0,20,vpColor::green);
+	}
+	vpDisplay::displayCamera(Inocam,ceMc,cam,20,vpColor::blue,1); 
 
-  	vpDisplay::flush(Icamera) ;
-  	vpDisplay::getClick(Icamera) ;
+  	vpDisplay::flush(Icamera);
+  	vpDisplay::flush(Inocam);
+  	vpDisplay::getClick(Icamera);
+  	vpDisplay::getClick(Inocam);
 
 	return 0;
 }
-
