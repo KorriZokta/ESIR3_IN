@@ -44,12 +44,12 @@ void TutorialApplication::createScene(void)
     /*Setting up a Light*/
     mSceneMgr->setAmbientLight(Ogre::ColourValue(0.2,0.2,0.2));
     Ogre::Vector3 lightdir(0.55,-0.3,0.75);
-    lightdir.normalize();
+    lightdir.normalise();
     Ogre::Light* light = mSceneMgr->createLight("TestLight");
     light->setType(Ogre::Light::LT_DIRECTIONAL);
     light->setDirection(lightdir);
     light->setDiffuseColour(Ogre::ColourValue::White);
-    light->setSpeculatColour(Ogre::ColourValue(0.4,0.4,0.4));
+    light->setSpecularColour(Ogre::ColourValue(0.4,0.4,0.4));
     
     /*Configuring the Terrain*/
     mTerrainGlobals = OGRE_NEW Ogre::TerrainGlobalOptions();
@@ -63,7 +63,7 @@ void TutorialApplication::createScene(void)
    mTerrainGroup->loadAllTerrains(true);
    if(mTerrainsImported)
    {
-      Ogre::TerrainGroup::Terrainiterator ti = mTerrainGroup->getTerrainIterator();
+      Ogre::TerrainGroup::TerrainIterator ti = mTerrainGroup->getTerrainIterator();
       while(ti.hasMoreElements())
       {
          Ogre::Terrain* t = ti.getNext()->instance;
@@ -74,21 +74,50 @@ void TutorialApplication::createScene(void)
    
    /*Writing configureTerrainDefaults*/
    /*Writing defineTerrain*/
-   /*Writing getTerrainImage*/ //DONE
+   /*Writing getTerrainImage*/
+   /*Writing initBlendMaps*/
+   //LE TEST MARCHE PAS :D //
+   /*Terrain Loading Label*/
+   /*Cleaning Up*/
+   /*TODO SkyBoxes*/
 }
 
 void TutorialApplication::createFrameListener()
 {
    BaseApplication::createFrameListener();
+   mInfoLabel = mTrayMgr->createLabel(OgreBites::TL_TOP, "TerrainInfo", "", 350);
 }
 
 void TutorialApplication::destroyScene()
 {
+   OGRE_DELETE mTerrainGroup;
+   OGRE_DELETE mTerrainGlobals;
 }
 
 bool TutorialApplication::frameRenderingQueued(const Ogre::FrameEvent& fe)
 {
    bool ret = BaseApplication::frameRenderingQueued(fe);
+   if (mTerrainGroup->isDerivedDataUpdateInProgress())
+   {
+      mTrayMgr->moveWidgetToTray(mInfoLabel, OgreBites::TL_TOP, 0);
+      mInfoLabel->show();
+ 
+      if (mTerrainsImported)
+         mInfoLabel->setCaption("Building terrain...");
+      else   
+         mInfoLabel->setCaption("Updating terrain...");
+   }
+   else
+   {
+      mTrayMgr->removeWidgetFromTray(mInfoLabel);
+      mInfoLabel->hide();
+ 
+      if (mTerrainsImported)
+      {
+         mTerrainGroup->saveAllTerrains(true);
+         mTerrainsImported = false;
+      }
+   }
    return ret;
 }
 
@@ -103,7 +132,6 @@ void getTerrainImage(bool flipX, bool flipY, Ogre::Image& img)
 void TutorialApplication::defineTerrain(long x, long y)
 {
    Ogre::String filename = mTerrainGroup->generateFilename(x, y);
-   
    bool exists = Ogre::ResourceGroupManager::getSingleton().resourceExists(mTerrainGroup->getResourceGroup(),filename);
    
    if (exists)
@@ -120,6 +148,38 @@ void TutorialApplication::defineTerrain(long x, long y)
 
 void TutorialApplication::initBlendMaps(Ogre::Terrain* terrain)
 {
+   Ogre::Real minHeight0 = 70;
+   Ogre::Real fadeDist0 = 40;
+   Ogre::Real minHeight1 = 70;
+   Ogre::Real fadeDist1 = 15;
+   
+   Ogre::TerrainLayerBlendMap* blendMap0 = terrain->getLayerBlendMap(1);
+   Ogre::TerrainLayerBlendMap* blendMap1 = terrain->getLayerBlendMap(2);
+   
+   float* pBlend0 = blendMap0->getBlendPointer();
+   float* pBlend1 = blendMap1->getBlendPointer();
+   
+   for(Ogre::uint16 y=0; y<terrain->getLayerBlendMapSize(); ++y)
+   {
+      for(Ogre::uint16 x=0; x<terrain->getLayerBlendMapSize(); ++x)
+      {
+         Ogre::Real tx,ty;
+         
+         blendMap0->convertImageToTerrainSpace(x,y,&tx,&ty);
+         Ogre::Real height=terrain->getHeightAtTerrainPosition(tx,ty);
+         Ogre::Real val=(height-minHeight0)/fadeDist0;
+         val=Ogre::Math::Clamp(val, (Ogre::Real)0, (Ogre::Real)1);
+         *pBlend0++ = val;
+         
+         val=(height - minHeight1)/fadeDist1;
+         val = Ogre::Math::Clamp(val,(Ogre::Real)0,(Ogre::Real)1);
+         *pBlend1++ = val;
+      }
+   }
+   blendMap0->dirty();
+   blendMap1->dirty();
+   blendMap0->update();
+   blendMap1->update();
 }
 
 void TutorialApplication::configureTerrainDefaults(Ogre::Light* light)
@@ -129,8 +189,8 @@ void TutorialApplication::configureTerrainDefaults(Ogre::Light* light)
    mTerrainGlobals->setCompositeMapDistance(3000);
    
    mTerrainGlobals->setLightMapDirection(light->getDerivedDirection());
-   mTerrainGlobals->setCompositeMapAmbiant(mSceneMgr->getAmbiantLight());
-   mTerrainGlobals->setLightMapDirection(light->getDiffuseColour());
+   mTerrainGlobals->setCompositeMapAmbient(mSceneMgr->getAmbientLight());
+   mTerrainGlobals->setCompositeMapDiffuse(light->getDiffuseColour());
    
    Ogre::Terrain::ImportData& importData = mTerrainGroup->getDefaultImportSettings();
    importData.terrainSize=513;
