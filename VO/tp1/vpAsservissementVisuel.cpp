@@ -99,16 +99,22 @@ int main()
 	
 	
 	/*Matrices Homogenes*/
-	vpHomogeneousMatrix cMs(0,0,1, 0,0,vpMath::rad(90));
+	//vpHomogeneousMatrix cMs(0,0,0.5, 0,0,0);
+	vpHomogeneousMatrix cMs(2,1,3, 0,0,vpMath::rad(90));
 	vpHomogeneousMatrix obMs(0,0,2, 0,0,0);
 	vpHomogeneousMatrix tMs(0,0,1, 0,0,0);
 	vpHomogeneousMatrix obMc,obMt,tMc;
 	obMc = obMs*cMs.inverse();
 	obMt = obMs*tMs.inverse();	
+	
+	/*cout<<k<<endl<<endl;
+	cout<<proj<<endl<<endl;*/
    
    /*Coord Scène(mètres)*/
 	int nbPoints = 4;
 	vpColVector sPoints[nbPoints];
+	for(int i=0;i<4;i++)
+	   sPoints[i].resize(4);
 	
 	vpColVector sX1(4);
 	sX1[0]=-l;
@@ -145,6 +151,10 @@ int main()
 		cPoints[i]=sceneToCamera(cMs,sPoints[i]);
 	}
 	
+	/*for(int j=0;j<4;j++)
+	   cout<<cPoints[1][j]<<'\t';
+	cout<<endl<<endl;*/
+	
 	/*Coord Obs(mètres)*/
 	vpColVector obPoints[nbPoints];
 	for (int i = 0; i<nbPoints;i++) {
@@ -162,10 +172,15 @@ int main()
 	vpColVector obPointsProj[nbPoints];
 	vpColVector tPointsProj[nbPoints];
 	for(int i=0; i<nbPoints; i++) {
+	   
 	   cPointsProj[i] = proj*cPoints[i];
 	   obPointsProj[i] = proj*obPoints[i];
 	   tPointsProj[i] = proj*tPoints[i];
 	}
+	
+	/*for(int j=0;j<3;j++)
+	   cout<<cPointsProj[1][j]<<'\t';
+	cout<<endl<<endl;*/
 	
 	/*Coord Cam+Obs+Targ proj(pixels)*/
 	vpColVector cPointsPix[nbPoints];
@@ -176,6 +191,9 @@ int main()
 	   obPointsPix[i] = k*obPointsProj[i];
 	   tPointsPix[i] = k*tPointsProj[i];
 	}
+	/*for(int j=0;j<3;j++)
+	   cout<<cPointsPix[1][j]<<"\t";
+	cout<<endl<<endl;*/
 	
 	/*Init affichage*/
 	vpImage<unsigned char> iCam(600,600,0);
@@ -245,6 +263,10 @@ int main()
 	}
 	
 	if(dim==3) {
+	   vpMatrix erreur(6,1);
+	   for(int i=0;i<6;i++)
+	      erreur[i][0] = 1000;
+	   double lambda = 1.0;
 	   vpTranslationVector ttc;
 	   vpRotationMatrix tRc;
 	   vpThetaUVector thetaU;
@@ -253,28 +275,32 @@ int main()
    	vpMatrix ux;
    	vpMatrix identity;
    	identity.eye(3);
-   	tMc.extract(ttc);
-   	tMc.extract(thetaU);
    	
-   	while(1) {
-   	   tMc = tMc*cMs.inverse();
+   	while(erreur.euclideanNorm() > 1.00000000001) {
+   	   tMc = tMs*cMs.inverse();
       	tMc.extract(ttc);
       	tMc.extract(tRc);
       	tMc.extract(thetaU);
       	thetaU.extract(theta,u); 
+      	if ( u.euclideanNorm() !=0)
+      	   {u = u/u.euclideanNorm();}
       	ux = vpColVector::skew(u);
       	double sincardTheta = vpMath::sinc(theta);
       	double sincardThetaDemi = vpMath::sinc(theta/2.0);
    	
       	vpMatrix lOmega = identity+(theta/2.0)*ux+(1-sincardTheta/(sincardThetaDemi*sincardThetaDemi))*ux*ux.transpose();
       	vpMatrix matL(6,6);
-      	matL.insert(tRc,0,0);
-      	matL.insert(lOmega,3,3);
-      	cout<<matL<<endl;
+      	vpMatrix lThetaU(3,6);
+      	vpMatrix lttc(3,6);
+      	lThetaU.insert(lOmega,0,3);
+      	lttc.insert(tRc,0,0);
+      	matL.insert(lttc,0,0);
+      	matL.insert(lThetaU,3,0);
+      	erreur.insert(ttc,0,0);
+	      erreur.insert(u,3,0);
       	vpMatrix lPlus = matL.pseudoInverse();
-      	vpColVector v;
-      	vpMatrix e = tMs-cMs;
-      	v = -lPlus*e;
+      	vpColVector v(6);
+      	v = -lambda*lPlus*erreur;
       	
       	/*Modification de la position*/
 		   cMs = vpExponentialMap::direct(v,0.01).inverse()*cMs;
