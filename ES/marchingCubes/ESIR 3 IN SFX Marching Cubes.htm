@@ -1,0 +1,781 @@
+<html><head>
+<title>ESIR 3 IN : SFX - Marching Cubes</title>
+<meta http-equiv="content-type" content="text/html; charset=windows-1252">
+
+<script type="text/javascript" src="ficMC/glMatrix-0.js"></script>
+<script type="text/javascript" src="ficMC/webgl-utils.js"></script>
+
+<script id="per-vertex-lighting-fs" type="x-shader/x-fragment">
+	// diffus par sommet
+	// fragment shader
+    #ifdef GL_ES
+    precision highp float;
+    #endif
+
+	// entrée
+    varying vec3 vLightWeighting;
+
+	// main
+    void main(void) {
+        vec4 fragmentColor = vec4(1.0, 1.0, 1.0, 1.0);
+        gl_FragColor = vec4(fragmentColor.rgb * vLightWeighting, fragmentColor.a);
+    }
+</script>
+
+<script id="per-vertex-lighting-vs" type="x-shader/x-vertex">
+	// diffus par sommet
+	// vertex shader
+	
+	// attributes (vertex buffer)
+    attribute vec3 aVertexPosition;
+    attribute vec3 aVertexNormal;
+
+	// uniforms
+	// matrices de transformation
+    uniform mat4 uMVMatrix;
+    uniform mat4 uPMatrix;
+    uniform mat3 uNMatrix;
+	
+	// couleur ambiante
+    uniform vec3 uAmbientColor;
+	
+	// lampes position couleur
+    uniform vec3 uPointLightingLocation;
+    uniform vec3 uPointLightingColor;
+	
+	// material : color, Kd, spec
+	uniform vec3 uMatColor ;
+	float uKd =0.25;
+	float uSpec =15.0;
+
+	// sortie vers le fragment shader
+    varying vec3 vLightWeighting;
+
+    void main(void) {
+		// vertex in view space
+        vec4 mvPosition = uMVMatrix * vec4(aVertexPosition, 1.0);
+		// light direction
+		vec3 lightDirection = normalize(uPointLightingLocation - mvPosition.xyz);
+		// normal in viewspace
+        vec3 transformedNormal = normalize(uNMatrix * aVertexNormal);
+		
+		// eye direction
+		vec3 eye = normalize(-mvPosition.xyz);
+		
+      	// direction de reflexion
+        vec3 reflection = reflect(-lightDirection, transformedNormal);
+
+		// terme diffus
+		float diffuLightWeighting = max(dot(transformedNormal, lightDirection), 0.0);
+		
+		// terme speculaire
+		float specularLightWeighting = pow(max(dot(reflection, eye), 0.0), uSpec);		
+		
+		// terme metallique
+		float metalLightWeighting = pow(max(dot(reflection, eye), 0.0),uSpec*1.5);
+		// outputs
+
+       // vLightWeighting = uAmbientColor*uMatColor + uPointLightingColor *uMatColor * diffuLightWeighting *uKd + uPointLightingColor * specularLightWeighting*(1.0-uKd) ;
+		vLightWeighting = uAmbientColor*uMatColor + uPointLightingColor *uMatColor * diffuLightWeighting*uKd + uPointLightingColor *clamp(5.0*(specularLightWeighting-metalLightWeighting),0.0,1.0)*max(uKd,(1.0-uKd));
+		
+		gl_Position = uPMatrix * mvPosition;
+	
+    }
+</script>
+
+<script id="per-fragment-lighting-fs" type="x-shader/x-fragment">
+    #ifdef GL_ES
+    precision highp float;
+    #endif
+	// fragment shader
+	
+	
+	// uniform ambiant color
+    uniform vec3 uAmbientColor;
+
+
+	// uniform light location and color
+    uniform vec3 uPointLightingLocation;
+    uniform vec3 uPointLightingColor;
+
+	// varying input
+    varying vec3 mvPosition;
+	varying vec3 transformedNormal;
+	
+	// material : color, Kd, spec
+	uniform vec3 uMatColor ;
+	float uKd = 0.25;
+	float uSpec = 15.0;
+	
+    void main(void) {
+		vec3 diffuLightWeighting;
+		// diffuse
+        vec3 lightDirection = normalize(uPointLightingLocation - mvPosition);
+		float directionalLightWeighting = max(dot(transformedNormal, lightDirection), 0.0);
+
+
+      	// direction de reflexion
+        vec3 reflection = reflect(-lightDirection, transformedNormal);
+
+		// eye direction
+		vec3 eye = normalize(-mvPosition.xyz);
+		// terme speculaire
+		float specularLightWeighting = pow(max(dot(reflection, eye), 0.0), uSpec);
+        // terme metallique
+		float metalLightWeighting = pow(max(dot(reflection, eye), 0.0),uSpec*2.0);
+
+		//vec3 vLightWeighting = uAmbientColor*uMatColor + uPointLightingColor *uMatColor * directionalLightWeighting  *uKd + uPointLightingColor * specularLightWeighting*(1.0-uKd) ;
+		vec3 vLightWeighting = uAmbientColor*uMatColor + uPointLightingColor *uMatColor * directionalLightWeighting*uKd + uPointLightingColor *clamp(5.0*(specularLightWeighting-metalLightWeighting),0.0,1.0)*max(uKd,(1.0-uKd));
+
+        gl_FragColor = vec4(vLightWeighting, 1.0);
+    }
+</script>
+
+<script id="per-fragment-lighting-vs" type="x-shader/x-vertex">
+	// vertex shader
+    // attributes inputs 
+	attribute vec3 aVertexPosition;
+    attribute vec3 aVertexNormal;
+
+	// uniform matrices
+    uniform mat4 uMVMatrix;
+    uniform mat4 uPMatrix;
+    uniform mat3 uNMatrix;
+	
+	// varying input
+    varying vec3 mvPosition;
+	varying vec3 transformedNormal;
+
+    void main(void) {
+		// model to view 
+		vec4 vPosition = uMVMatrix * vec4(aVertexPosition, 1.0);
+		
+		mvPosition=vPosition.xyz;
+		
+		transformedNormal=uNMatrix*normalize(aVertexNormal);
+		
+		gl_Position = uPMatrix * vPosition;
+		
+
+    }
+</script>
+
+
+<script type="text/javascript">
+
+    // contexte openGL
+	var gl;
+	
+	// program et shaders
+	var currentProgram;
+    var perVertexProgram;
+    var perFragmentProgram;
+	
+	// vertex arrays
+	// cube
+	var cubeVertexPositionBuffer;
+    var cubeVertexNormalBuffer;
+    var cubeVertexIndexBuffer;
+    //01234564
+    var cubeVertexIndexBuffer10000000;//1
+    var cubeVertexIndexBuffer11000000;//2
+    var cubeVertexIndexBuffer10100000;//3
+    var cubeVertexIndexBuffer01001100;//4
+    var cubeVertexIndexBuffer11001100;//5
+    var cubeVertexIndexBuffer01011100;//6
+    var cubeVertexIndexBuffer10100101;//7
+    var cubeVertexIndexBuffer10001101;//8
+    var cubeVertexIndexBuffer01001101;//9
+    var cubeVertexIndexBuffer10000010;//10
+    var cubeVertexIndexBuffer11000010;//11
+    var cubeVertexIndexBuffer01010010;//12
+    var cubeVertexIndexBuffer10010110;//13
+    var cubeVertexIndexBuffer10001110;//14
+    
+    var cubeVertexIndexBuffer;
+	// sphere
+    var sphereVertexPositionBuffer;
+    var sphereVertexNormalBuffer;
+    var sphereVertexIndexBuffer;
+	
+	// piles de transformation
+    var mvMatrix = mat4.create();
+    var mvMatrixStack = [];
+    var pMatrix = mat4.create();
+	
+	// pour l'animation
+	var lastTime = 0;
+	var sphereAngle = 180;
+    var cubeAngle = 0;
+    
+//x-> -25   5
+//y-> -5    -25
+//z->  -5    -25
+    //pour les particules
+
+	// -----------------------------------------------------------------------------------
+    function initGL(canvas) {
+        try {
+            gl = canvas.getContext("experimental-webgl");
+            gl.viewportWidth = canvas.width;
+            gl.viewportHeight = canvas.height;
+        } catch (e) {
+        }
+        if (!gl) {
+            alert("Could not initialise WebGL, sorry :-(");
+        }
+    }
+	// -----------------------------------------------------------------------------------
+    function getShader(gl, id) {
+        var shaderScript = document.getElementById(id);
+        if (!shaderScript) {
+            return null;
+        }
+
+        var str = "";
+        var k = shaderScript.firstChild;
+        while (k) {
+            if (k.nodeType == 3) {
+                str += k.textContent;
+            }
+            k = k.nextSibling;
+        }
+
+        var shader;
+        if (shaderScript.type == "x-shader/x-fragment") {
+            shader = gl.createShader(gl.FRAGMENT_SHADER);
+        } else if (shaderScript.type == "x-shader/x-vertex") {
+            shader = gl.createShader(gl.VERTEX_SHADER);
+        } else {
+            return null;
+        }
+
+        gl.shaderSource(shader, str);
+        gl.compileShader(shader);
+
+        if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+            alert(gl.getShaderInfoLog(shader));
+            return null;
+        }
+
+        return shader;
+    }
+	// -----------------------------------------------------------------------------------
+    function createProgram(fragmentShaderID, vertexShaderID) {
+        var fragmentShader = getShader(gl, fragmentShaderID);
+        var vertexShader = getShader(gl, vertexShaderID);
+
+        var program = gl.createProgram();
+        gl.attachShader(program, vertexShader);
+        gl.attachShader(program, fragmentShader);
+        gl.linkProgram(program);
+
+        if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+            alert("Could not initialise shaders");
+        }
+
+		// arrayBuffer -> attributes
+        program.vertexPositionAttribute = gl.getAttribLocation(program, "aVertexPosition");
+        gl.enableVertexAttribArray(program.vertexPositionAttribute);
+
+        program.vertexNormalAttribute = gl.getAttribLocation(program, "aVertexNormal");
+        gl.enableVertexAttribArray(program.vertexNormalAttribute);
+
+		// uniforms
+        program.pMatrixUniform = gl.getUniformLocation(program, "uPMatrix");
+        program.mvMatrixUniform = gl.getUniformLocation(program, "uMVMatrix");
+        program.nMatrixUniform = gl.getUniformLocation(program, "uNMatrix");
+
+        program.ambientColorUniform = gl.getUniformLocation(program, "uAmbientColor");
+        program.pointLightingLocationUniform = gl.getUniformLocation(program, "uPointLightingLocation");
+        program.pointLightingColorUniform = gl.getUniformLocation(program, "uPointLightingColor");
+
+        program.matColorUniform = gl.getUniformLocation(program, "uMatColor");
+
+
+        return program;
+    }
+	// -----------------------------------------------------------------------------------
+    function initShaders() {
+        perVertexProgram = createProgram("per-vertex-lighting-fs", "per-vertex-lighting-vs");
+		perFragmentProgram = createProgram("per-fragment-lighting-fs", "per-fragment-lighting-vs");
+
+    }
+	// -----------------------------------------------------------------------------------
+    function mvPushMatrix() {
+        var copy = mat4.create();
+        mat4.set(mvMatrix, copy);
+        mvMatrixStack.push(copy);
+    }
+	// -----------------------------------------------------------------------------------
+    function mvPopMatrix() {
+        if (mvMatrixStack.length == 0) {
+            throw "Invalid popMatrix!";
+        }
+        mvMatrix = mvMatrixStack.pop();
+    }
+	// -----------------------------------------------------------------------------------
+    function setMatrixUniforms() {
+        gl.uniformMatrix4fv(currentProgram.pMatrixUniform, false, pMatrix);
+        gl.uniformMatrix4fv(currentProgram.mvMatrixUniform, false, mvMatrix);
+
+        var normalMatrix = mat3.create();
+        mat4.toInverseMat3(mvMatrix, normalMatrix);
+        mat3.transpose(normalMatrix);
+        gl.uniformMatrix3fv(currentProgram.nMatrixUniform, false, normalMatrix);
+    }
+	// -----------------------------------------------------------------------------------
+    function degToRad(degrees) {
+        return degrees * Math.PI / 180;
+    }
+	// -----------------------------------------------------------------------------------
+    function initBuffers() {
+		// vertexbuffer
+        cubeVertexPositionBuffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, cubeVertexPositionBuffer);
+        vertices = [// Front face
+            0.0,  0.0,  1.0, //0
+            1.0,  0.0,  1.0, //1
+            1.0,  1.0,  1.0, //2
+            0.0,  1.0,  1.0, //3
+
+            // Back face
+            0.0,  0.0,  0.0, //4
+            1.0,  0.0,  0.0, //5
+            1.0,  1.0,  0.0, //6
+            0.0,  1.0,  0.0, //7
+            
+            // Front faceMC
+            0.5,  0.0,  1.0, //8
+            0.0,  0.5,  1.0, //9
+            0.5,  1.0,  1.0, //10
+            1.0,  0.5,  1.0, //11
+
+            // Back faceMC
+            0.5,  0.0,  0.0, //12
+            0.0,  0.5,  0.0, //13
+            0.5,  1.0,  0.0, //14
+            1.0,  0.5,  0.0, //15
+             
+            // side MC
+            0.0,  0.0,  0.5, //16
+            1.0,  0.0,  0.5, //17
+            1.0,  1.0,  0.5, //18
+            0.0,  1.0,  0.5, //19
+        ];
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertices), gl.STATIC_DRAW);
+        cubeVertexPositionBuffer.itemSize = 3;
+        cubeVertexPositionBuffer.numItems = 20;
+
+		// normalbuffer
+        cubeVertexNormalBuffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, cubeVertexNormalBuffer);
+        var vertexNormals = [  
+         1.0,  1.0,  1.0,  
+         1.0,  1.0,  1.0,  
+         1.0,  1.0,  1.0,  
+         1.0,  1.0,  1.0,  
+         1.0,  1.0,  1.0,  
+         1.0,  1.0,  1.0,  
+         1.0,  1.0,  1.0,  
+         1.0,  1.0,  1.0,  
+         1.0,  1.0,  1.0,  
+         1.0,  1.0,  1.0,  
+         1.0,  1.0,  1.0,  
+         1.0,  1.0,  1.0,  
+         1.0,  1.0,  1.0,  
+         1.0,  1.0,  1.0,  
+         1.0,  1.0,  1.0,  
+         1.0,  1.0,  1.0,  
+         1.0,  1.0,  1.0,  
+         1.0,  1.0,  1.0,  
+         1.0,  1.0,  1.0,  
+         1.0,  1.0,  1.0,
+        ];
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(vertexNormals), gl.STATIC_DRAW);
+        cubeVertexNormalBuffer.itemSize = 3;
+        cubeVertexNormalBuffer.numItems = 36;
+
+		// indexbuffer
+        cubeVertexIndexBuffer = gl.createBuffer();
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, cubeVertexIndexBuffer);
+        var cubeVertexIndices = [
+            0,1,2,0,2,3,
+	    4,5,7,5,7,6,
+            1,2,6,1,5,6,
+            2,7,6,2,3,7,
+            0,3,4,3,4,7,
+            0,1,4,1,4,5
+        ];
+        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(cubeVertexIndices), gl.STATIC_DRAW);
+        cubeVertexIndexBuffer.itemSize = 1;
+        cubeVertexIndexBuffer.numItems = 36;
+        
+        //1
+        cubeVertexIndexBuffer10000000 = gl.createBuffer();
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, cubeVertexIndexBuffer10000000);
+        var cubeVertexIndices10000000 = [
+            16,8,9,
+        ];
+        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(cubeVertexIndices10000000), gl.STATIC_DRAW);
+        cubeVertexIndexBuffer10000000.itemSize = 1;
+        cubeVertexIndexBuffer10000000.numItems = 3;
+
+        
+        
+        //2
+        cubeVertexIndexBuffer11000000 = gl.createBuffer();
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, cubeVertexIndexBuffer11000000);
+        var cubeVertexIndices11000000 = [
+            16,9,17,9,17,11,
+        ];
+        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(cubeVertexIndices11000000), gl.STATIC_DRAW);
+        cubeVertexIndexBuffer11000000.itemSize = 1;
+        cubeVertexIndexBuffer11000000.numItems = 6;
+        
+        //3
+        cubeVertexIndexBuffer10100000 = gl.createBuffer();
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, cubeVertexIndexBuffer10100000);
+        var cubeVertexIndices10100000 = [
+            16,8,9,10,18,11,
+        ];
+        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(cubeVertexIndices10100000), gl.STATIC_DRAW);
+        cubeVertexIndexBuffer10100000.itemSize = 1;
+        cubeVertexIndexBuffer10100000.numItems = 6;
+        
+        
+
+        
+        
+        //4
+        cubeVertexIndexBuffer01001100 = gl.createBuffer();
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, cubeVertexIndexBuffer01001100);
+        var cubeVertexIndices01001100 = [
+            
+        ];
+        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(cubeVertexIndices01001100), gl.STATIC_DRAW);
+        cubeVertexIndexBuffer01001100.itemSize = 1;
+        cubeVertexIndexBuffer01001100.numItems = 6;
+        
+        
+        //5
+        cubeVertexIndexBuffer11001100 = gl.createBuffer();
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, cubeVertexIndexBuffer01001100);
+        var cubeVertexIndices11001100 = [
+            9,11,15,9,15,13,
+        ];
+        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(cubeVertexIndices11001100), gl.STATIC_DRAW);
+        cubeVertexIndexBuffer11001100.itemSize = 1;
+        cubeVertexIndexBuffer11001100.numItems = 6;
+        
+        
+        //6
+        cubeVertexIndexBuffer01011100 = gl.createBuffer();
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, cubeVertexIndexBuffer01011100);
+        var cubeVertexIndices01011100 = [
+            9,10,19,16,8,11,16,11,13,16,13,15,
+        ];
+        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(cubeVertexIndices01011100), gl.STATIC_DRAW);
+        cubeVertexIndexBuffer01011100.itemSize = 1;
+        cubeVertexIndexBuffer01011100.numItems = 12;
+        
+        
+        
+        //7
+        cubeVertexIndexBuffer10100101 = gl.createBuffer();
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, cubeVertexIndexBuffer10100101);
+        var cubeVertexIndices10100101 = [
+            16,8,9,10,18,11,19,14,13,17,15,12,
+        ];
+        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(cubeVertexIndices10100101), gl.STATIC_DRAW);
+        cubeVertexIndexBuffer10100101.itemSize = 1;
+        cubeVertexIndexBuffer10100101.numItems = 12;
+        
+        
+        
+        
+        
+        //8
+        cubeVertexIndexBuffer10001101 = gl.createBuffer();
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, cubeVertexIndexBuffer10001101);
+        var cubeVertexIndices10001101 = [
+            9,19,14,9,14,8,14,8,15,8,15,17,
+        ];
+        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(cubeVertexIndices10001101), gl.STATIC_DRAW);
+        cubeVertexIndexBuffer10001101.itemSize = 1;
+        cubeVertexIndexBuffer10001101.numItems = 12;
+        
+        
+        
+        
+        
+        
+        //9
+        cubeVertexIndexBuffer01001101 = gl.createBuffer();
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, cubeVertexIndexBuffer01001101);
+        var cubeVertexIndices01001101 = [
+            8,16,19,8,19,15,15,19,14,8,15,12,
+        ];
+        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(cubeVertexIndices01001101), gl.STATIC_DRAW);
+        cubeVertexIndexBuffer01001101.itemSize = 1;
+        cubeVertexIndexBuffer01001101.numItems = 12;
+        
+        
+        
+        
+        
+        //10
+        cubeVertexIndexBuffer10000010 = gl.createBuffer();
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, cubeVertexIndexBuffer10000010);
+        var cubeVertexIndices10000010 = [
+            16,9,8,18,14,15,
+        ];
+        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(cubeVertexIndices10000010), gl.STATIC_DRAW);
+        cubeVertexIndexBuffer10000010.itemSize = 1;
+        cubeVertexIndexBuffer10000010.numItems = 6;
+        
+        
+        
+        
+        
+        //11
+        cubeVertexIndexBuffer11000010 = gl.createBuffer();
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, cubeVertexIndexBuffer11000010);
+        var cubeVertexIndices11000010 = [
+            16,9,17,9,17,11,18,14,15,
+        ];
+        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(cubeVertexIndices11000010), gl.STATIC_DRAW);
+        cubeVertexIndexBuffer11000010.itemSize = 1;
+        cubeVertexIndexBuffer11000010.numItems = 9;
+        
+        
+        
+        
+        
+        //12
+        cubeVertexIndexBuffer01010010 = gl.createBuffer();
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, cubeVertexIndexBuffer01010010);
+        var cubeVertexIndices01010010 = [
+            8,11,17,9,10,19,14,15,18,
+        ];
+        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(cubeVertexIndices01010010), gl.STATIC_DRAW);
+        cubeVertexIndexBuffer01010010.itemSize = 1;
+        cubeVertexIndexBuffer01010010.numItems = 9;
+        
+        
+        
+        
+        
+        //13
+        cubeVertexIndexBuffer10010110 = gl.createBuffer();
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, cubeVertexIndexBuffer10010110);
+        var cubeVertexIndices10010110 = [
+            8,10,19,8,16,19,18,14,12,18,17,12,
+            ];
+        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(cubeVertexIndices10010110), gl.STATIC_DRAW);
+        cubeVertexIndexBuffer10010110.itemSize = 1;
+        cubeVertexIndexBuffer10010110.numItems = 12;
+        
+        
+        
+        
+        
+        //14
+        cubeVertexIndexBuffer10001110 = gl.createBuffer();
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, cubeVertexIndexBuffer10001110);
+        var cubeVertexIndices10001110 = [
+            9,8,13,13,8,18,18,8,17,13,18,14,
+            ];
+        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(cubeVertexIndices10001110), gl.STATIC_DRAW);
+        cubeVertexIndexBuffer10001110.itemSize = 1;
+        cubeVertexIndexBuffer10001110.numItems = 12;
+    }
+	// -----------------------------------------------------------------------------------
+    function drawScene() {
+        gl.viewport(0, 0, gl.viewportWidth, gl.viewportHeight);
+        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+        mat4.perspective(45, gl.viewportWidth / gl.viewportHeight, 0.1, 100.0, pMatrix);
+
+		var perFragmentLightning=document.getElementById("per-fragment").checked;
+		
+		if(perFragmentLightning){
+			currentProgram = perFragmentProgram;
+		}else{
+			currentProgram=perVertexProgram;
+		}
+		
+        gl.useProgram(currentProgram);
+
+        gl.uniform3f(
+            currentProgram.ambientColorUniform,
+            parseFloat(document.getElementById("ambientR").value),
+            parseFloat(document.getElementById("ambientG").value),
+            parseFloat(document.getElementById("ambientB").value)
+        );
+        gl.uniform3f(
+            currentProgram.pointLightingLocationUniform,
+            parseFloat(document.getElementById("lightPositionX").value),
+            parseFloat(document.getElementById("lightPositionY").value),
+            parseFloat(document.getElementById("lightPositionZ").value)
+        );
+        gl.uniform3f(
+            currentProgram.pointLightingColorUniform,
+            parseFloat(document.getElementById("pointR").value),
+            parseFloat(document.getElementById("pointG").value),
+            parseFloat(document.getElementById("pointB").value)
+        );
+        gl.uniform3f(
+            currentProgram.matColorUniform,
+            parseFloat(document.getElementById("mR").value),
+            parseFloat(document.getElementById("mG").value),
+            parseFloat(document.getElementById("mB").value)
+        );
+
+        mat4.identity(mvMatrix);
+
+        mat4.translate(mvMatrix, [0, 0, -10]);
+
+        mat4.rotate(mvMatrix, degToRad(30), [1, 0, 0]);
+
+    }
+    
+    function calcul(xIm, yIm, zIm ,tab){
+      var poids=0;
+      var cptPoids=0;
+      var dist;
+      for (i = 0; i<3;i++){
+	
+	var X = (xIm-tab[i][0])*(xIm-tab[i][0]);
+	var Y = (yIm-tab[i][1])*(yIm-tab[i][1]);
+	var Z = (zIm-tab[i][2])*(zIm-tab[i][2]);
+	dist = Math.sqrt(X+Y+Z);
+	
+	poids = tab[i][3]/dist;
+	
+	cptPoids=poids+cptPoids;
+      }
+      if(cptPoids > 1.0){
+	 return true;
+      }else{
+	 return false;
+      }
+    }
+	// -----------------------------------------------------------------------------------
+    function animate() {
+        var tablo = [
+        [-10,-10,-15,7],
+        [0,-10,-15,4],
+        [-10,-20,-15,3]];
+        
+        var timeNow = new Date().getTime();
+        if (lastTime != 0) {
+            var elapsed = timeNow - lastTime;
+            //var x=-25;
+            //var y=25;
+            //var z=25;
+            //Le marching cubes se fait la
+            for(x=-25;x<5;x++){
+	      for(y=5;y<25;y++){
+		for(z=5;z<25;z++){
+		mat4.translate(mvMatrix, [x, -y, -z]);
+		//bool a = calcul(x,y,z,tablo);
+		  if((x==tablo[0][0] && -y==tablo[0][1] && -z==tablo[0][2])||(x==tablo[1][0] && -y==tablo[1][1] && -z==tablo[1][2])||(x==tablo[2][0] && -y==tablo[2][1] && -z==tablo[2][2])){
+		    mvPushMatrix();
+		    //mat4.translate(mvMatrix, [x, y, z]);
+		    gl.bindBuffer(gl.ARRAY_BUFFER, cubeVertexPositionBuffer);
+		    gl.vertexAttribPointer(currentProgram.vertexPositionAttribute, cubeVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
+		    gl.bindBuffer(gl.ARRAY_BUFFER, cubeVertexNormalBuffer);
+		    gl.vertexAttribPointer(currentProgram.vertexNormalAttribute, cubeVertexNormalBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
+		    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, cubeVertexIndexBuffer);
+		    setMatrixUniforms();
+		    gl.drawElements(gl.TRIANGLES, cubeVertexIndexBuffer.numItems, gl.UNSIGNED_SHORT, 0);
+		    mvPopMatrix();
+		  }
+		  mat4.translate(mvMatrix, [-x, y, z]);
+		}
+	      }
+	    }
+        }
+        lastTime = timeNow;
+    }
+	// -----------------------------------------------------------------------------------
+    function tick() {
+        requestAnimFrame(tick);
+        drawScene();
+        animate();
+    }
+	// -----------------------------------------------------------------------------------
+    function webGLStart() {
+        var canvas = document.getElementById("shaderDemo");
+        initGL(canvas);
+        initShaders();
+        initBuffers();
+		// init GL
+        gl.clearColor(0.0, 0.0, 0.2, 1.0);
+        gl.enable(gl.DEPTH_TEST);
+		// lancement de l'animation
+        tick();
+    }
+	// -----------------------------------------------------------------------------------
+</script>
+</head>
+
+<body onload="webGLStart();">
+
+<table border="0" width="100%">
+<tbody><tr>
+	<td><img src="ficMC/univ_rennes1_h256.jpg"></td>
+	  <td><h3>ESIR 3 IN</h3><br> Marching Cubes</td>
+	<td><img src="ficMC/esir_v131.jpg"></td></tr>
+<tr>
+	<td><i>auteur :</i> J. LE BEC & F. BECKER sur une architecture de Rémi COZOT </td>
+	<td><i>date :</i> 2016</td>
+</tr>
+</tbody></table>
+    
+	<h3>Exécutable</h3>
+	<br>
+    <canvas id="shaderDemo" style="border: none;" width="960" height="540"></canvas>
+	
+    <br>
+<input id="per-fragment" checked="checked" type="checkbox"> Eclairage par pixel (fragment) (/ par sommet (vertex)) <br>    <br>
+
+		<b><i>Materiaux :</i></b><br>
+     <table style="border: 0pt none; padding: 10px;">
+        <tbody>
+        <tr>
+            <td><i>Couleur:</i>
+            </td><td>R: <input id="mR" value="1.0" type="text">
+            </td><td>G: <input id="mG" value="0.8" type="text">
+            </td><td>B: <input id="mB" value="0.2" type="text">
+        </td></tr>
+    </tbody></table>
+	<b><i>Lumière ponctuelle :</i></b><br>
+    <table style="border: 0pt none; padding: 10px;">
+        <tbody><tr>
+            <td><i>Position :</i>
+            </td><td>X: <input id="lightPositionX" value="0.0" type="text">
+            </td><td>Y: <input id="lightPositionY" value="2.0" type="text">
+            </td><td>Z: <input id="lightPositionZ" value="-5.0" type="text">
+        </td></tr>
+        <tr>
+            <td><i>Couleur:</i>
+            </td><td>R: <input id="pointR" value="1.0" type="text">
+            </td><td>G: <input id="pointG" value="1.0" type="text">
+            </td><td>B: <input id="pointB" value="1.0" type="text">
+        </td></tr>
+    </tbody></table>
+    <b><i>Lumière ambiante :</i></b><br>
+    <table style="border: 0pt none; padding: 10px;">
+        <tbody><tr>
+            <td><i>Couleur:</i>
+            </td><td>R: <input id="ambientR" value="0.1" type="text">
+            </td><td>G: <input id="ambientG" value="0.1" type="text">
+            </td><td>B: <input id="ambientB" value="0.1" type="text">
+        </td></tr>
+    </tbody></table>
+    <br>
+</dd></body></html>

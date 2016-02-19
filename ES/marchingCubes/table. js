@@ -1,0 +1,289 @@
+        vertices = [
+            // Front face
+            0.0,  0.0,  1.0, //0
+            1.0,  0.0,  1.0, //1
+            1.0,  1.0,  1.0, //2
+            0.0,  1.0,  1.0, //3
+
+            // Back face
+            0.0,  0.0,  0.0, //4
+            0.0,  1.0,  0.0, //5
+            1.0,  1.0,  0.0, //6
+            1.0,  0.0,  0.0, //7
+             
+            // Front faceMC
+            0.0,  0.5,  1.0, //8
+            0.5,  0.0,  1.0, //9
+            0.5,  1.0,  1.0, //10
+            1.0,  0.5,  1.0, //11
+
+            // Back faceMC
+            0.0,  0.5,  0.0, //12
+            0.5,  0.0,  0.0, //13
+            0.5,  1.0,  0.0, //14
+            1.0,  0.5,  0.0, //15
+             
+            // side MC
+            0.0,  0.0,  0.5, //16
+            0.0,  1.0,  0.5, //17
+            1.0,  1.0,  0.5, //18
+            1.0,  0.0,  0.5, //19
+            
+        ];
+
+    var cubeVertexIndicesAAAAAAAA;
+    var cubeVertexIndicesAAAAAAAB;
+    var cubeVertexIndicesAAAAAABA;
+    var cubeVertexIndicesAAAAAABB;
+    var cubeVertexIndicesAAAAABAA;
+    var cubeVertexIndicesAAAAABAB;
+    var cubeVertexIndicesAAAAABBA;
+    var cubeVertexIndicesAAAAABBB;
+    var cubeVertexIndicesAAAABAAA;
+    var cubeVertexIndicesAAAABAAB;
+    var cubeVertexIndicesAAAABABA;
+    var cubeVertexIndicesAAAABABB;
+    var cubeVertexIndicesAAAABBAA;
+    var cubeVertexIndicesAAAABBAB;
+    var cubeVertexIndicesAAAABBBA;
+    var cubeVertexIndicesAAAABBBB;
+    var cubeVertexIndicesAAABAAAA;
+    var cubeVertexIndicesAAABAAAB;
+    var cubeVertexIndicesAAABAABA;
+    var cubeVertexIndicesAAABAABB;
+    var cubeVertexIndicesAAABABAA;
+    var cubeVertexIndicesAAABABAB;
+    var cubeVertexIndicesAAABABBA;
+    var cubeVertexIndicesAAABABBB;
+    var cubeVertexIndicesAAABBAAA;
+    var cubeVertexIndicesAAABBAAB;
+    var cubeVertexIndicesAAABBABA;
+    var cubeVertexIndicesAAABBABB;
+    var cubeVertexIndicesAAABBBAA;
+    var cubeVertexIndicesAAABBBAB;
+    var cubeVertexIndicesAAABBBBA;
+    var cubeVertexIndicesAAABBBBB;
+    var cubeVertexIndicesAABAAAAA;
+    var cubeVertexIndicesAABAAAAB;
+    var cubeVertexIndicesAABAAABA;
+    var cubeVertexIndicesAABAAABB;
+    var cubeVertexIndicesAABAABAA;
+    var cubeVertexIndicesAABAABAB;
+    var cubeVertexIndicesAABAABBA;
+    var cubeVertexIndicesAABAABBB;
+    var cubeVertexIndicesAABABAAA;
+    var cubeVertexIndicesAABABAAB;
+    var cubeVertexIndicesAABABABA;
+    var cubeVertexIndicesAABABABB;
+    var cubeVertexIndicesAABABBAA;
+    var cubeVertexIndicesAABABBAB;
+    var cubeVertexIndicesAABABBBA;
+    var cubeVertexIndicesAABABBBB;
+    var cubeVertexIndicesAABBAAAA;
+    var cubeVertexIndicesAABBAAAB;
+    var cubeVertexIndicesAABBAABA;
+    var cubeVertexIndicesAABBAABB;
+    var cubeVertexIndicesAABBABAA;
+    var cubeVertexIndicesAABBABAB;
+    var cubeVertexIndicesAABBABBA;
+    var cubeVertexIndicesAABBABBB;
+    var cubeVertexIndicesAABBBAAA;
+    var cubeVertexIndicesAABBBAAB;
+    var cubeVertexIndicesAABBBABA;
+    var cubeVertexIndicesAABBBABB;
+    var cubeVertexIndicesAABBBBAA;
+    var cubeVertexIndicesAABBBBAB;
+    var cubeVertexIndicesAABBBBBA;
+    var cubeVertexIndicesAABBBBBB;
+    var cubeVertexIndicesABAAAAAA;
+    var cubeVertexIndicesABAAAAAB;
+    var cubeVertexIndicesABAAAABA;
+    var cubeVertexIndicesABAAAABB;
+    var cubeVertexIndicesABAAABAA;
+    var cubeVertexIndicesABAAABAB;
+    var cubeVertexIndicesABAAABBA;
+    var cubeVertexIndicesABAAABBB;
+    var cubeVertexIndicesABAABAAA;
+    var cubeVertexIndicesABAABAAB;
+    var cubeVertexIndicesABAABABA;
+    var cubeVertexIndicesABAABABB;
+    var cubeVertexIndicesABAABBAA;
+    var cubeVertexIndicesABAABBAB;
+    var cubeVertexIndicesABAABBBA;
+    var cubeVertexIndicesABAABBBB;
+    var cubeVertexIndicesABABAAAA;
+    var cubeVertexIndicesABABAAAB;
+    var cubeVertexIndicesABABAABA;
+    var cubeVertexIndicesABABAABB;
+    var cubeVertexIndicesABABABAA;
+    var cubeVertexIndicesABABABAB;
+    var cubeVertexIndicesABABABBA;
+    var cubeVertexIndicesABABABBB;
+    var cubeVertexIndicesABABBAAA;
+    var cubeVertexIndicesABABBAAB;
+    var cubeVertexIndicesABABBABA;
+    var cubeVertexIndicesABABBABB;
+    var cubeVertexIndicesABABBBAA;
+    var cubeVertexIndicesABABBBAB;
+    var cubeVertexIndicesABABBBBA;
+    var cubeVertexIndicesABABBBBB;
+    var cubeVertexIndicesABBAAAAA;
+    var cubeVertexIndicesABBAAAAB;
+    var cubeVertexIndicesABBAAABA;
+    var cubeVertexIndicesABBAAABB;
+    var cubeVertexIndicesABBAABAA;
+    var cubeVertexIndicesABBAABAB;
+    var cubeVertexIndicesABBAABBA;
+    var cubeVertexIndicesABBAABBB;
+    var cubeVertexIndicesABBABAAA;
+    var cubeVertexIndicesABBABAAB;
+    var cubeVertexIndicesABBABABA;
+    var cubeVertexIndicesABBABABB;
+    var cubeVertexIndicesABBABBAA;
+    var cubeVertexIndicesABBABBAB;
+    var cubeVertexIndicesABBABBBA;
+    var cubeVertexIndicesABBABBBB;
+    var cubeVertexIndicesABBBAAAA;
+    var cubeVertexIndicesABBBAAAB;
+    var cubeVertexIndicesABBBAABA;
+    var cubeVertexIndicesABBBAABB;
+    var cubeVertexIndicesABBBABAA;
+    var cubeVertexIndicesABBBABAB;
+    var cubeVertexIndicesABBBABBA;
+    var cubeVertexIndicesABBBABBB;
+    var cubeVertexIndicesABBBBAAA;
+    var cubeVertexIndicesABBBBAAB;
+    var cubeVertexIndicesABBBBABA;
+    var cubeVertexIndicesABBBBABB;
+    var cubeVertexIndicesABBBBBAA;
+    var cubeVertexIndicesABBBBBAB;
+    var cubeVertexIndicesABBBBBBA;
+    var cubeVertexIndicesABBBBBBB;
+    var cubeVertexIndicesBAAAAAAA;
+    var cubeVertexIndicesBAAAAAAB;
+    var cubeVertexIndicesBAAAAABA;
+    var cubeVertexIndicesBAAAAABB;
+    var cubeVertexIndicesBAAAABAA;
+    var cubeVertexIndicesBAAAABAB;
+    var cubeVertexIndicesBAAAABBA;
+    var cubeVertexIndicesBAAAABBB;
+    var cubeVertexIndicesBAAABAAA;
+    var cubeVertexIndicesBAAABAAB;
+    var cubeVertexIndicesBAAABABA;
+    var cubeVertexIndicesBAAABABB;
+    var cubeVertexIndicesBAAABBAA;
+    var cubeVertexIndicesBAAABBAB;
+    var cubeVertexIndicesBAAABBBA;
+    var cubeVertexIndicesBAAABBBB;
+    var cubeVertexIndicesBAABAAAA;
+    var cubeVertexIndicesBAABAAAB;
+    var cubeVertexIndicesBAABAABA;
+    var cubeVertexIndicesBAABAABB;
+    var cubeVertexIndicesBAABABAA;
+    var cubeVertexIndicesBAABABAB;
+    var cubeVertexIndicesBAABABBA;
+    var cubeVertexIndicesBAABABBB;
+    var cubeVertexIndicesBAABBAAA;
+    var cubeVertexIndicesBAABBAAB;
+    var cubeVertexIndicesBAABBABA;
+    var cubeVertexIndicesBAABBABB;
+    var cubeVertexIndicesBAABBBAA;
+    var cubeVertexIndicesBAABBBAB;
+    var cubeVertexIndicesBAABBBBA;
+    var cubeVertexIndicesBAABBBBB;
+    var cubeVertexIndicesBABAAAAA;
+    var cubeVertexIndicesBABAAAAB;
+    var cubeVertexIndicesBABAAABA;
+    var cubeVertexIndicesBABAAABB;
+    var cubeVertexIndicesBABAABAA;
+    var cubeVertexIndicesBABAABAB;
+    var cubeVertexIndicesBABAABBA;
+    var cubeVertexIndicesBABAABBB;
+    var cubeVertexIndicesBABABAAA;
+    var cubeVertexIndicesBABABAAB;
+    var cubeVertexIndicesBABABABA;
+    var cubeVertexIndicesBABABABB;
+    var cubeVertexIndicesBABABBAA;
+    var cubeVertexIndicesBABABBAB;
+    var cubeVertexIndicesBABABBBA;
+    var cubeVertexIndicesBABABBBB;
+    var cubeVertexIndicesBABBAAAA;
+    var cubeVertexIndicesBABBAAAB;
+    var cubeVertexIndicesBABBAABA;
+    var cubeVertexIndicesBABBAABB;
+    var cubeVertexIndicesBABBABAA;
+    var cubeVertexIndicesBABBABAB;
+    var cubeVertexIndicesBABBABBA;
+    var cubeVertexIndicesBABBABBB;
+    var cubeVertexIndicesBABBBAAA;
+    var cubeVertexIndicesBABBBAAB;
+    var cubeVertexIndicesBABBBABA;
+    var cubeVertexIndicesBABBBABB;
+    var cubeVertexIndicesBABBBBAA;
+    var cubeVertexIndicesBABBBBAB;
+    var cubeVertexIndicesBABBBBBA;
+    var cubeVertexIndicesBABBBBBB;
+    var cubeVertexIndicesBBAAAAAA;
+    var cubeVertexIndicesBBAAAAAB;
+    var cubeVertexIndicesBBAAAABA;
+    var cubeVertexIndicesBBAAAABB;
+    var cubeVertexIndicesBBAAABAA;
+    var cubeVertexIndicesBBAAABAB;
+    var cubeVertexIndicesBBAAABBA;
+    var cubeVertexIndicesBBAAABBB;
+    var cubeVertexIndicesBBAABAAA;
+    var cubeVertexIndicesBBAABAAB;
+    var cubeVertexIndicesBBAABABA;
+    var cubeVertexIndicesBBAABABB;
+    var cubeVertexIndicesBBAABBAA;
+    var cubeVertexIndicesBBAABBAB;
+    var cubeVertexIndicesBBAABBBA;
+    var cubeVertexIndicesBBAABBBB;
+    var cubeVertexIndicesBBABAAAA;
+    var cubeVertexIndicesBBABAAAB;
+    var cubeVertexIndicesBBABAABA;
+    var cubeVertexIndicesBBABAABB;
+    var cubeVertexIndicesBBABABAA;
+    var cubeVertexIndicesBBABABAB;
+    var cubeVertexIndicesBBABABBA;
+    var cubeVertexIndicesBBABABBB;
+    var cubeVertexIndicesBBABBAAA;
+    var cubeVertexIndicesBBABBAAB;
+    var cubeVertexIndicesBBABBABA;
+    var cubeVertexIndicesBBABBABB;
+    var cubeVertexIndicesBBABBBAA;
+    var cubeVertexIndicesBBABBBAB;
+    var cubeVertexIndicesBBABBBBA;
+    var cubeVertexIndicesBBABBBBB;
+    var cubeVertexIndicesBBBAAAAA;
+    var cubeVertexIndicesBBBAAAAB;
+    var cubeVertexIndicesBBBAAABA;
+    var cubeVertexIndicesBBBAAABB;
+    var cubeVertexIndicesBBBAABAA;
+    var cubeVertexIndicesBBBAABAB;
+    var cubeVertexIndicesBBBAABBA;
+    var cubeVertexIndicesBBBAABBB;
+    var cubeVertexIndicesBBBABAAA;
+    var cubeVertexIndicesBBBABAAB;
+    var cubeVertexIndicesBBBABABA;
+    var cubeVertexIndicesBBBABABB;
+    var cubeVertexIndicesBBBABBAA;
+    var cubeVertexIndicesBBBABBAB;
+    var cubeVertexIndicesBBBABBBA;
+    var cubeVertexIndicesBBBABBBB;
+    var cubeVertexIndicesBBBBAAAA;
+    var cubeVertexIndicesBBBBAAAB;
+    var cubeVertexIndicesBBBBAABA;
+    var cubeVertexIndicesBBBBAABB;
+    var cubeVertexIndicesBBBBABAA;
+    var cubeVertexIndicesBBBBABAB;
+    var cubeVertexIndicesBBBBABBA;
+    var cubeVertexIndicesBBBBABBB;
+    var cubeVertexIndicesBBBBBAAA;
+    var cubeVertexIndicesBBBBBAAB;
+    var cubeVertexIndicesBBBBBABA;
+    var cubeVertexIndicesBBBBBABB;
+    var cubeVertexIndicesBBBBBBAA;
+    var cubeVertexIndicesBBBBBBAB;
+    var cubeVertexIndicesBBBBBBBA;
+    var cubeVertexIndicesBBBBBBBB;
