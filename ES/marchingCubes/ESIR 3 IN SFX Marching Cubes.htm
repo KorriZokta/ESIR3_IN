@@ -191,7 +191,19 @@
     var cubeVertexIndexBuffer01010010;//12
     var cubeVertexIndexBuffer10010110;//13
     var cubeVertexIndexBuffer10001110;//14
-    
+
+    //outlayer
+    var cubeVertexIndexBuffer10001000;//15
+    var cubeVertexIndexBuffer10001100;//16    
+    var cubeVertexIndexBuffer10010000;//17  
+    var cubeVertexIndexBuffer10010001;//18  
+    var cubeVertexIndexBuffer10011100;//19
+    var cubeVertexIndexBuffer11001000;//20
+    var cubeVertexIndexBuffer11010000;//21
+    var cubeVertexIndexBuffer11100000;//22
+    var cubeVertexIndexBuffer11100100;//23
+    var cubeVertexIndexBuffer11110000;//23
+
     var cubeVertexIndexBuffer;
 	// sphere
     var sphereVertexPositionBuffer;
@@ -207,11 +219,8 @@
 	var lastTime = 0;
 	var sphereAngle = 180;
     var cubeAngle = 0;
+    var move=0;
     
-//x-> -25   5
-//y-> -5    -25
-//z->  -5    -25
-    //pour les particules
 
 	// -----------------------------------------------------------------------------------
     function initGL(canvas) {
@@ -589,6 +598,115 @@
         gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(cubeVertexIndices10001110), gl.STATIC_DRAW);
         cubeVertexIndexBuffer10001110.itemSize = 1;
         cubeVertexIndexBuffer10001110.numItems = 12;
+
+
+        //15
+        cubeVertexIndexBuffer10001000 = gl.createBuffer();
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, cubeVertexIndexBuffer10001000);
+        var cubeVertexIndices10001000 = [
+            16,17,19,17,19,18,
+            ];
+        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(cubeVertexIndices10001000), gl.STATIC_DRAW);
+        cubeVertexIndexBuffer10001000.itemSize = 1;
+        cubeVertexIndexBuffer10001000.numItems = 6;
+
+        //16
+        cubeVertexIndexBuffer10001100 = gl.createBuffer();
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, cubeVertexIndexBuffer10001100);
+        var cubeVertexIndices10001100 = [
+            8,9,17,17,9,15,15,13,17,
+            ];
+        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(cubeVertexIndices10001100), gl.STATIC_DRAW);
+        cubeVertexIndexBuffer10001100.itemSize = 1;
+        cubeVertexIndexBuffer10001100.numItems = 9;
+
+
+        //17
+        cubeVertexIndexBuffer10010000 = gl.createBuffer();
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, cubeVertexIndexBuffer10010000);
+        var cubeVertexIndices10010000 = [
+            8,19,16,8,19,10,
+            ];
+        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(cubeVertexIndices10010000), gl.STATIC_DRAW);
+        cubeVertexIndexBuffer10010000.itemSize = 1;
+        cubeVertexIndexBuffer10010000.numItems = 6;
+
+
+        //18
+        cubeVertexIndexBuffer10010001 = gl.createBuffer();
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, cubeVertexIndexBuffer10010001);
+        var cubeVertexIndices10010001 = [
+            13,14,16,16,14,8,8,16,10,
+            ];
+        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(cubeVertexIndices10010001), gl.STATIC_DRAW);
+        cubeVertexIndexBuffer10010001.itemSize = 1;
+        cubeVertexIndexBuffer10010001.numItems = 9;
+
+        //19
+        cubeVertexIndexBuffer10011100 = gl.createBuffer();
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, cubeVertexIndexBuffer10011100);
+        var cubeVertexIndices10011100 = [
+            8,17,10,17,10,13,13,17,16,10,13,19,
+            ];
+        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(cubeVertexIndices10011100), gl.STATIC_DRAW);
+        cubeVertexIndexBuffer10011100.itemSize = 1;
+        cubeVertexIndexBuffer10011100.numItems = 12;
+
+
+        //20
+        cubeVertexIndexBuffer11001000 = gl.createBuffer();
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, cubeVertexIndexBuffer11001000);
+        var cubeVertexIndices11001000 = [
+            12,13,17,17,13,11,11,17,9,
+            ];
+        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(cubeVertexIndices11001000), gl.STATIC_DRAW);
+        cubeVertexIndexBuffer11001000.itemSize = 1;
+        cubeVertexIndexBuffer11001000.numItems = 9;
+
+
+
+        //21
+        cubeVertexIndexBuffer11010000 = gl.createBuffer();
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, cubeVertexIndexBuffer11010000);
+        var cubeVertexIndices11010000 = [
+            11,17,10,17,10,19,10,19,16,
+            ];
+        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(cubeVertexIndices11010000), gl.STATIC_DRAW);
+        cubeVertexIndexBuffer11010000.itemSize = 1;
+        cubeVertexIndexBuffer11010000.numItems = 9;
+
+
+        //22
+        cubeVertexIndexBuffer11100000 = gl.createBuffer();
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, cubeVertexIndexBuffer11100000);
+        var cubeVertexIndices11100000 = [
+            10,18,9,9,18,16,16,17,9,
+            ];
+        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(cubeVertexIndices11100000), gl.STATIC_DRAW);
+        cubeVertexIndexBuffer11100000.itemSize = 1;
+        cubeVertexIndexBuffer11100000.numItems = 9;
+
+
+        //23
+        cubeVertexIndexBuffer11100100 = gl.createBuffer();
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, cubeVertexIndexBuffer11100100);
+        var cubeVertexIndices11100100 = [
+            18,10,11,10,11,12,10,12,9,12,9,16
+            ];
+        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(cubeVertexIndices11100100), gl.STATIC_DRAW);
+        cubeVertexIndexBuffer11100100.itemSize = 1;
+        cubeVertexIndexBuffer11100100.numItems = 12;
+
+        //24
+        cubeVertexIndexBuffer11110000 = gl.createBuffer();
+        gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, cubeVertexIndexBuffer11110000);
+        var cubeVertexIndices11110000 = [
+            16,19,18,16,17,18,
+            ];
+        gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array(cubeVertexIndices11110000), gl.STATIC_DRAW);
+        cubeVertexIndexBuffer11110000.itemSize = 1;
+        cubeVertexIndexBuffer11110000.numItems = 6;
+
     }
 	// -----------------------------------------------------------------------------------
     function drawScene() {
@@ -638,68 +756,363 @@
 
         mat4.rotate(mvMatrix, degToRad(30), [1, 0, 0]);
 
+        tablo = [
+        [(-10+move),-10,-15,2.5],
+        [0,-10,-15,1],
+        [-10+move,-20+move,-15,1.8]];
+        
+            //var x=10;
+            //var y=10;
+            //var z=15;
+            //on lance le marching cubes
+            for(x=-25;x<5;x++){
+               for(y=5;y<25;y++){
+                  for(z=5;z<25;z++){
+                      mat4.translate(mvMatrix, [x, -y, -z]);
+                      var sGo=checkEnter(x,-y,-z,tablo);
+                      mat4.translate(mvMatrix, [-x, y, z]);
+                    }  
+               }
+           }
     }
     
     function calcul(xIm, yIm, zIm ,tab){
       var poids=0;
       var cptPoids=0;
-      var dist;
-      for (i = 0; i<3;i++){
+      var dist=0;
+      for (aaa = 0; aaa<3;aaa++){
 	
-	var X = (xIm-tab[i][0])*(xIm-tab[i][0]);
-	var Y = (yIm-tab[i][1])*(yIm-tab[i][1]);
-	var Z = (zIm-tab[i][2])*(zIm-tab[i][2]);
-	dist = Math.sqrt(X+Y+Z);
-	
-	poids = tab[i][3]/dist;
-	
-	cptPoids=poids+cptPoids;
+    	var X = (xIm-tab[aaa][0])*(xIm-tab[aaa][0]);
+    	var Y = (yIm-tab[aaa][1])*(yIm-tab[aaa][1]);
+    	var Z = (zIm-tab[aaa][2])*(zIm-tab[aaa][2]);
+    	dist = Math.sqrt(X+Y+Z);
+    	
+    	poids = tab[aaa][3]/dist;
+    	
+    	cptPoids=poids+cptPoids;
       }
+
       if(cptPoids > 1.0){
-	 return true;
+	       return true;
       }else{
-	 return false;
+	       return false;
       }
     }
+
+    function heavyCalc(tabLC,cptN){
+
+        var valDepart= tabLC[0]+tabLC[1]+tabLC[2]+tabLC[3]+tabLC[4]+tabLC[5]+tabLC[6]+tabLC[7];
+
+        if(valDepart=="11111111"){
+            return;
+        }
+        var bddRef=[]
+        bddRef.push(
+            "10000000",
+            "11000000",
+            "10100000",
+            "01001100",
+            "11001100",
+            "01011100",
+            "10100101",
+            "10001101",
+            "01001101",
+            "10000010",
+            "11000010",
+            "01010010",
+            "10010110",
+            "10001110",
+
+            //here the outlayer
+            "10001000",
+            "10001100",
+            "10010000",
+            "10010001",
+            "10011100",
+            "11001000",
+            "11010000",
+            "11100000",
+            "11100100",
+            "11110000"
+
+
+        );
+
+        var BDDsize=bddRef.length;
+
+        
+        if(cptN>4){
+            for(prelim =0;prelim<8;prelim++){
+                if(tabLC[prelim]=="1"){
+                    tabLC[prelim]="0";
+                }else{
+                    tabLC[prelim]="1";
+                }
+            }
+        }
+
+
+        var tab0=tabLC;
+        var tab1=tabLC;
+        var tab2=tabLC;
+        
+
+        var cptBDD=0;
+        var cptTab=0;
+        var cptF=0;
+        var trouve=false;
+
+
+        while(!trouve&&cptBDD<BDDsize){
+            var data = bddRef[cptBDD];
+            cptTab=0;
+            var winner="";
+            while(!trouve&&cptTab<3){
+                cptF=0;
+                var tmp;
+                if(cptTab==0){
+                    while(cptF<8){
+                        var source=(tab0[0]+tab0[1]+tab0[2]+tab0[3]+tab0[4]+tab0[5]+tab0[6]+tab0[7]);
+                        if(source==data){
+                            trouve=true;
+                            winner=data;
+                            break;
+                        }else{
+                            tmp=tab0.shift()
+                            tab0.push(tmp);
+                        }
+                        cptF++;
+                    }
+
+                }/*else if(cptTab==1){
+                    while(cptF<8){
+                        var source=(tab1[0]+tab1[1]+tab1[2]+tab1[3]+tab1[4]+tab1[5]+tab1[6]+tab1[7]);
+                        if(source==data){
+                            trouve=true;
+                            winner=data;
+                            break;
+                        }else{
+                            tmp=tab1.shift();
+                            tab1.push(tmp);
+                        }
+                        cptF++;
+                    }
+
+                }else if(cptTab==2){
+                    while(cptF<8){
+                        var source=(tab2[0]+tab2[1]+tab2[2]+tab2[3]+tab2[4]+tab2[5]+tab2[6]+tab2[7]);
+                        if(source==data){
+                            trouve=true;
+                            winner=data;
+                            break;
+                        }else{
+                            tmp=tab2.shift();
+                            tab2.push(tmp);
+                        }
+                        cptF++;
+                    }
+
+                }*/
+                if(!trouve){
+
+                    cptTab++;
+                }
+
+            }
+            if(!trouve){
+
+            cptBDD++;
+            }
+        }
+
+            mvPushMatrix();
+
+        var toLoad=cubeVertexIndexBuffer;
+        //time to apply the patch
+        if(winner=="")/*||cptTab==1||cptTab==2)*/{
+ 
+            /*mvPushMatrix();
+            gl.bindBuffer(gl.ARRAY_BUFFER, cubeVertexPositionBuffer);
+            gl.vertexAttribPointer(currentProgram.vertexPositionAttribute,
+            cubeVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
+            gl.bindBuffer(gl.ARRAY_BUFFER, cubeVertexNormalBuffer);
+            gl.vertexAttribPointer(currentProgram.vertexNormalAttribute, cubeVertexNormalBuffer.itemSize, gl.FLOAT, false, 0, 0);
+            gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, toLoad);
+            setMatrixUniforms();
+            gl.drawElements(gl.TRIANGLES, toLoad.numItems, gl.UNSIGNED_SHORT, 0);
+            mvPopMatrix();*/
+        }else{
+            
+            switch(winner){
+                case "10000000":
+                    toLoad=cubeVertexIndexBuffer10000000;
+                    break;
+                case "11000000":
+                    toLoad=cubeVertexIndexBuffer11000000;
+                    break;
+                case "10100000":
+                    toLoad=cubeVertexIndexBuffer10100000;
+                    break;
+                case "01001100":
+                    toLoad=cubeVertexIndexBuffer01001100;
+                    break;
+                case "11001100":
+                    toLoad=cubeVertexIndexBuffer11001100;
+                    break;
+                case "01011100":
+                    toLoad=cubeVertexIndexBuffer01011100;
+                    break;
+                case "10100101":
+                    toLoad=cubeVertexIndexBuffer10100101;
+                    break;
+                case "10001101":
+                    toLoad=cubeVertexIndexBuffer10001101;
+                    break;
+                case "01001101":
+                    toLoad=cubeVertexIndexBuffer01001101;
+                    break;
+                case "10000010":
+                    toLoad=cubeVertexIndexBuffer10000010;
+                    break;
+                case "11000010":
+                    toLoad=cubeVertexIndexBuffer11000010;
+                    break;
+                case "01010010":
+                    toLoad=cubeVertexIndexBuffer01010010;
+                    break;
+                case "10010110":
+                    toLoad=cubeVertexIndexBuffer10000110;
+                    break;
+                case "10001110":
+                    toLoad=cubeVertexIndexBuffer10001110;
+                    break;    
+                case "10001000":
+                    toLoad=cubeVertexIndexBuffer10001000;
+                    break;    
+                case "10001100":
+                    toLoad=cubeVertexIndexBuffer10001100;
+                    break;    
+                case "10010000":
+                    toLoad=cubeVertexIndexBuffer10010000;
+                    break;    
+                case "10010001":
+                    toLoad=cubeVertexIndexBuffer10010000;
+                    break;        
+                case "11001000":
+                    toLoad=cubeVertexIndexBuffer11001000;
+                    break;        
+                case "11010000":
+                    toLoad=cubeVertexIndexBuffer11010000;
+                    break;            
+                case "11100000":
+                    toLoad=cubeVertexIndexBuffer11100000;
+                    break;            
+                case "11100100":
+                    toLoad=cubeVertexIndexBuffer11100100;
+                    break;            
+                case "11110000":
+                    toLoad=cubeVertexIndexBuffer11110000;
+                    break;
+            }
+            
+
+            //last step: the rotation
+            //var cptTab=0;//0 à 2
+            //var cptF=0;  //decale
+
+            if(cptTab==0){
+
+            }/*else if(cptTab==1){
+                mat4.rotate(mvMatrix, degToRad(-90), [0, 1, 0]);
+            }else if(cptTab==2){
+                mat4.rotate(mvMatrix, degToRad(90), [1, 0, 0]);
+            }*/
+            switch(cptF){
+                case 0:
+                    mat4.rotate(mvMatrix, degToRad(90), [0, 0, 1]);
+                    break;
+                case 1:
+                    mat4.rotate(mvMatrix, degToRad(90), [0, 0, 1]);
+                    break;
+                case 2:
+                    mat4.rotate(mvMatrix, degToRad(180), [0, 0, 1]);
+                    break;
+                case 3:
+                    mat4.rotate(mvMatrix, degToRad(-90), [0, 0, 1]);
+                    break;
+                case 4:
+                    mat4.rotate(mvMatrix, degToRad(180), [0, 1, 0]);
+                    mat4.rotate(mvMatrix, degToRad(90), [0, 0, 1]);
+                    break;
+                case 5:
+                    mat4.rotate(mvMatrix, degToRad(180), [0, 1, 0]);
+                    break;
+                case 6:
+                    mat4.rotate(mvMatrix, degToRad(180), [0, 1, 0]);
+                    mat4.rotate(mvMatrix, degToRad(180), [0, 0, 1]);
+                    break;
+                case 7:
+                    mat4.rotate(mvMatrix, degToRad(180), [0, 1, 0]);
+                    mat4.rotate(mvMatrix, degToRad(-90), [0, 0, 1]);
+                    break;
+            }
+
+            }
+            //
+            //mat4.translate(mvMatrix, [x, y, z]);
+            gl.bindBuffer(gl.ARRAY_BUFFER, cubeVertexPositionBuffer);
+            gl.vertexAttribPointer(currentProgram.vertexPositionAttribute,
+            cubeVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
+
+            gl.bindBuffer(gl.ARRAY_BUFFER, cubeVertexNormalBuffer);
+            gl.vertexAttribPointer(currentProgram.vertexNormalAttribute, cubeVertexNormalBuffer.itemSize, gl.FLOAT, false, 0, 0);
+            gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, toLoad);
+            setMatrixUniforms();
+            gl.drawElements(gl.TRIANGLES, toLoad.numItems, gl.UNSIGNED_SHORT, 0);
+            mvPopMatrix();
+    }
+    
+    function checkEnter(xIm,yIm,zIm,tableu){
+        var tabT=[];
+    	cpt=0;
+        //cptB=0;
+
+    	for(i=0 ; i<2 ; i++){
+    	for(j=0 ; j<2 ; j++){
+    	for(k=0 ; k<2 ; k++){
+//calcul(i+xIm,j+yIm,k+zIm,tab)
+        	     if(calcul(i+xIm,j+yIm,k+zIm,tableu)){
+    	       	    tabT.push("1");
+                    cpt++;
+    	         }else{
+    		        tabT.push("0");
+    	         }
+                //cptB++;
+        }
+    	}
+        }
+
+	    //si on est dans les bornes on fait marcher les cubes
+    	if(cpt>0){
+        var tabLC=[];
+        tabLC.push(tabT[1],tabT[5],tabT[7],tabT[3],tabT[0],tabT[4],tabT[6],tabT[2]);
+    	   heavyCalc(tabLC,cpt);
+    	}
+    }
+    
 	// -----------------------------------------------------------------------------------
     function animate() {
-        var tablo = [
-        [-10,-10,-15,7],
-        [0,-10,-15,4],
-        [-10,-20,-15,3]];
-        
-        var timeNow = new Date().getTime();
         if (lastTime != 0) {
-            var elapsed = timeNow - lastTime;
-            //var x=-25;
-            //var y=25;
-            //var z=25;
-            //Le marching cubes se fait la
-            for(x=-25;x<5;x++){
-	      for(y=5;y<25;y++){
-		for(z=5;z<25;z++){
-		mat4.translate(mvMatrix, [x, -y, -z]);
-		//bool a = calcul(x,y,z,tablo);
-		  if((x==tablo[0][0] && -y==tablo[0][1] && -z==tablo[0][2])||(x==tablo[1][0] && -y==tablo[1][1] && -z==tablo[1][2])||(x==tablo[2][0] && -y==tablo[2][1] && -z==tablo[2][2])){
-		    mvPushMatrix();
-		    //mat4.translate(mvMatrix, [x, y, z]);
-		    gl.bindBuffer(gl.ARRAY_BUFFER, cubeVertexPositionBuffer);
-		    gl.vertexAttribPointer(currentProgram.vertexPositionAttribute, cubeVertexPositionBuffer.itemSize, gl.FLOAT, false, 0, 0);
+        var timeNow = new Date().getTime();
+        var elapsed = timeNow - lastTime;
+        
+        move=move+0.01;        
 
-		    gl.bindBuffer(gl.ARRAY_BUFFER, cubeVertexNormalBuffer);
-		    gl.vertexAttribPointer(currentProgram.vertexNormalAttribute, cubeVertexNormalBuffer.itemSize, gl.FLOAT, false, 0, 0);
 
-		    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, cubeVertexIndexBuffer);
-		    setMatrixUniforms();
-		    gl.drawElements(gl.TRIANGLES, cubeVertexIndexBuffer.numItems, gl.UNSIGNED_SHORT, 0);
-		    mvPopMatrix();
-		  }
-		  mat4.translate(mvMatrix, [-x, y, z]);
-		}
-	      }
-	    }
         }
-        lastTime = timeNow;
+
+        lastTime = timeNow;         
     }
 	// -----------------------------------------------------------------------------------
     function tick() {
