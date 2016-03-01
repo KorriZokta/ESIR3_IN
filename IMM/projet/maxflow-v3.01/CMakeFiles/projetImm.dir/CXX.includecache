@@ -1,0 +1,52 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/private/student/6/46/12010646/ESIR3IN/Imagerie Medievale Mesopotamienne/projet/maxflow-v3.01/block.h
+block.h
+/private/student/6/46/12010646/ESIR3IN/Imagerie Medievale Mesopotamienne/projet/maxflow-v3.01/block.h
+stdlib.h
+-
+
+/private/student/6/46/12010646/ESIR3IN/Imagerie Medievale Mesopotamienne/projet/maxflow-v3.01/graph.cpp
+stdio.h
+-
+stdlib.h
+-
+string.h
+-
+graph.h
+/private/student/6/46/12010646/ESIR3IN/Imagerie Medievale Mesopotamienne/projet/maxflow-v3.01/graph.h
+instances.inc
+/private/student/6/46/12010646/ESIR3IN/Imagerie Medievale Mesopotamienne/projet/maxflow-v3.01/instances.inc
+
+/private/student/6/46/12010646/ESIR3IN/Imagerie Medievale Mesopotamienne/projet/maxflow-v3.01/graph.h
+string.h
+-
+block.h
+/private/student/6/46/12010646/ESIR3IN/Imagerie Medievale Mesopotamienne/projet/maxflow-v3.01/block.h
+assert.h
+-
+
+/private/student/6/46/12010646/ESIR3IN/Imagerie Medievale Mesopotamienne/projet/maxflow-v3.01/instances.inc
+graph.h
+/private/student/6/46/12010646/ESIR3IN/Imagerie Medievale Mesopotamienne/projet/maxflow-v3.01/graph.h
+
+/private/student/6/46/12010646/ESIR3IN/Imagerie Medievale Mesopotamienne/projet/maxflow-v3.01/main.cpp
+stdio.h
+-
+graph.h
+/private/student/6/46/12010646/ESIR3IN/Imagerie Medievale Mesopotamienne/projet/maxflow-v3.01/graph.h
+
+/private/student/6/46/12010646/ESIR3IN/Imagerie Medievale Mesopotamienne/projet/maxflow-v3.01/maxflow.cpp
+stdio.h
+-
+graph.h
+/private/student/6/46/12010646/ESIR3IN/Imagerie Medievale Mesopotamienne/projet/maxflow-v3.01/graph.h
+instances.inc
+/private/student/6/46/12010646/ESIR3IN/Imagerie Medievale Mesopotamienne/projet/maxflow-v3.01/instances.inc
+

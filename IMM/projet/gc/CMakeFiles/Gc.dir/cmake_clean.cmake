@@ -1,0 +1,42 @@
+FILE(REMOVE_RECURSE
+  "CMakeFiles/Gc.dir/Gc/System/Format.cpp.o"
+  "CMakeFiles/Gc.dir/Gc/System/Log.cpp.o"
+  "CMakeFiles/Gc.dir/Gc/System/Time/StopWatch.cpp.o"
+  "CMakeFiles/Gc.dir/Gc/Math/Algebra/Eigenvectors.cpp.o"
+  "CMakeFiles/Gc.dir/Gc/Math/Geometry/ConvexHull.cpp.o"
+  "CMakeFiles/Gc.dir/Gc/Math/Geometry/Voronoi.cpp.o"
+  "CMakeFiles/Gc.dir/Gc/Flow/General/FordFulkerson.cpp.o"
+  "CMakeFiles/Gc.dir/Gc/Flow/General/EdmondsKarp.cpp.o"
+  "CMakeFiles/Gc.dir/Gc/Flow/General/Dinitz.cpp.o"
+  "CMakeFiles/Gc.dir/Gc/Flow/General/BoykovKolmogorov.cpp.o"
+  "CMakeFiles/Gc.dir/Gc/Flow/General/PushRelabel/Fifo.cpp.o"
+  "CMakeFiles/Gc.dir/Gc/Flow/General/PushRelabel/FifoGap.cpp.o"
+  "CMakeFiles/Gc.dir/Gc/Flow/General/PushRelabel/HighestLevel.cpp.o"
+  "CMakeFiles/Gc.dir/Gc/Flow/General/Kohli.cpp.o"
+  "CMakeFiles/Gc.dir/Gc/Flow/Grid/CommonBase.cpp.o"
+  "CMakeFiles/Gc.dir/Gc/Flow/Grid/Kohli.cpp.o"
+  "CMakeFiles/Gc.dir/Gc/Flow/Grid/ZengDanek.cpp.o"
+  "CMakeFiles/Gc.dir/Gc/Flow/Grid/DanekLabels.cpp.o"
+  "CMakeFiles/Gc.dir/Gc/Flow/Grid/PushRelabel/HighestLevel.cpp.o"
+  "CMakeFiles/Gc.dir/Gc/Flow/Grid/PushRelabel/Fifo.cpp.o"
+  "CMakeFiles/Gc.dir/Gc/Energy/Potential/Metric/RiemannianDanek.cpp.o"
+  "CMakeFiles/Gc.dir/Gc/Energy/Potential/Metric/RiemannianBoykov.cpp.o"
+  "CMakeFiles/Gc.dir/Gc/Energy/Min/Grid/AlphaBetaSwap.cpp.o"
+  "CMakeFiles/Gc.dir/Gc/Energy/Min/Grid/AlphaExpansion.cpp.o"
+  "CMakeFiles/Gc.dir/Gc/Data/Image.cpp.o"
+  "CMakeFiles/Gc.dir/Gc/Algo/Segmentation/Tools.cpp.o"
+  "CMakeFiles/Gc.dir/Gc/Algo/Segmentation/ChanVese.cpp.o"
+  "CMakeFiles/Gc.dir/Gc/Algo/Segmentation/RoussonDeriche.cpp.o"
+  "CMakeFiles/Gc.dir/Gc/Algo/Segmentation/MumfordShah.cpp.o"
+  "CMakeFiles/Gc.dir/Gc/Algo/Geometry/DistanceTransform.cpp.o"
+  "CMakeFiles/Gc.dir/Gc/Algo/Geometry/SimplePoint.cpp.o"
+  "CMakeFiles/Gc.dir/Gc/Algo/Clustering/KMeans.cpp.o"
+  "libGcd.pdb"
+  "libGcd.so"
+  "libGcd.so.1.0.0"
+)
+
+# Per-language clean rules from dependency scanning.
+FOREACH(lang CXX)
+  INCLUDE(CMakeFiles/Gc.dir/cmake_clean_${lang}.cmake OPTIONAL)
+ENDFOREACH(lang)

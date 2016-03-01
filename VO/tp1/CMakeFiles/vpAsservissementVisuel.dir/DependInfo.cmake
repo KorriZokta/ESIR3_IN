@@ -4,10 +4,22 @@ SET(CMAKE_DEPENDS_LANGUAGES
   )
 # The set of files for implicit dependencies of each language:
 SET(CMAKE_DEPENDS_CHECK_CXX
-  "/home/zokta/ESIR3/VO/tp1/vpAsservissementVisuel.cpp" "/home/zokta/ESIR3/VO/tp1/CMakeFiles/vpAsservissementVisuel.dir/vpAsservissementVisuel.cpp.o"
+  "/home/farrelnzl/Projet/ESIR3_IN/VO/tp1/vpAsservissementVisuel.cpp" "/home/farrelnzl/Projet/ESIR3_IN/VO/tp1/CMakeFiles/vpAsservissementVisuel.dir/vpAsservissementVisuel.cpp.o"
   )
 SET(CMAKE_CXX_COMPILER_ID "GNU")
 
 # Targets to which this target links.
 SET(CMAKE_TARGET_LINKED_INFO_FILES
   )
+
+# The include file search paths:
+SET(CMAKE_C_TARGET_INCLUDE_PATH
+  "/usr/local/include"
+  "/usr/local/include/opencv"
+  "/usr/include/libxml2"
+  "/usr/local/include/OGRE"
+  "/usr/include/ois"
+  )
+SET(CMAKE_CXX_TARGET_INCLUDE_PATH ${CMAKE_C_TARGET_INCLUDE_PATH})
+SET(CMAKE_Fortran_TARGET_INCLUDE_PATH ${CMAKE_C_TARGET_INCLUDE_PATH})
+SET(CMAKE_ASM_TARGET_INCLUDE_PATH ${CMAKE_C_TARGET_INCLUDE_PATH})

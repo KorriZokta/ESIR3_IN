@@ -73,7 +73,7 @@ vpColVector calculVitesse(vpColVector & s, vpColVector & sEtoile, vpColVector* c
 
 int main()
 {
-	float l = 0.2;
+	float l = 0.5;
 	int dim = 3;
 	
 	/*Param Cam*/
@@ -101,8 +101,8 @@ int main()
 	/*Matrices Homogenes*/
 	//vpHomogeneousMatrix cMs(0,0,0.5, 0,0,0);
 	vpHomogeneousMatrix cMs(2,1,3, 0,0,vpMath::rad(90));
-	vpHomogeneousMatrix obMs(0,0,2, 0,0,0);
-	vpHomogeneousMatrix tMs(0,0,1, 0,0,0);
+	vpHomogeneousMatrix obMs(0,0,1, 0,0,0);
+	vpHomogeneousMatrix tMs(0,0,3, 0,0,0);
 	vpHomogeneousMatrix obMc,obMt,tMc;
 	obMc = obMs*cMs.inverse();
 	obMt = obMs*tMs.inverse();	

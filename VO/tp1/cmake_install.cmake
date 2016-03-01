@@ -1,4 +1,4 @@
-# Install script for directory: /home/zokta/ESIR3/VO/tp1
+# Install script for directory: /home/farrelnzl/Projet/ESIR3_IN/VO/tp1
 
 # Set the install prefix
 IF(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -38,7 +38,7 @@ ELSE(CMAKE_INSTALL_COMPONENT)
   SET(CMAKE_INSTALL_MANIFEST "install_manifest.txt")
 ENDIF(CMAKE_INSTALL_COMPONENT)
 
-FILE(WRITE "/home/zokta/ESIR3/VO/tp1/${CMAKE_INSTALL_MANIFEST}" "")
+FILE(WRITE "/home/farrelnzl/Projet/ESIR3_IN/VO/tp1/${CMAKE_INSTALL_MANIFEST}" "")
 FOREACH(file ${CMAKE_INSTALL_MANIFEST_FILES})
-  FILE(APPEND "/home/zokta/ESIR3/VO/tp1/${CMAKE_INSTALL_MANIFEST}" "${file}\n")
+  FILE(APPEND "/home/farrelnzl/Projet/ESIR3_IN/VO/tp1/${CMAKE_INSTALL_MANIFEST}" "${file}\n")
 ENDFOREACH(file)

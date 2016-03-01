@@ -1,0 +1,28 @@
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/private/student/6/46/12010646/ESIR3IN/Imagerie Medievale Mesopotamienne/projet/maxflow-v3.01/block.h
+block.h
+/private/student/6/46/12010646/ESIR3IN/Imagerie Medievale Mesopotamienne/projet/maxflow-v3.01/block.h
+stdlib.h
+-
+
+/private/student/6/46/12010646/ESIR3IN/Imagerie Medievale Mesopotamienne/projet/maxflow-v3.01/graph.h
+string.h
+-
+block.h
+/private/student/6/46/12010646/ESIR3IN/Imagerie Medievale Mesopotamienne/projet/maxflow-v3.01/block.h
+assert.h
+-
+
+/private/student/6/46/12010646/ESIR3IN/Imagerie Medievale Mesopotamienne/projet/maxflow-v3.01/projet.cpp
+stdio.h
+-
+graph.h
+/private/student/6/46/12010646/ESIR3IN/Imagerie Medievale Mesopotamienne/projet/maxflow-v3.01/graph.h
+
